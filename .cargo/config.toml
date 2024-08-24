@@ -1,0 +1,12 @@
+[unstable]
+build-std-features = ["compiler-builtins-mem"]
+build-std = ["core", "compiler_builtins", "alloc"]
+
+[target.build.json]
+rustflags = "-C target-feature=+crt-static -C target-feature=+rdrnd -C target-feature=+sse"
+
+[target.'cfg(target_os = "none")']
+runner = "bootimage runner"
+
+[build]
+target = "build.json"
