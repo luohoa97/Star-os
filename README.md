@@ -26,8 +26,9 @@
 > ```cd Star-os```
 > Now we can finally install the dependencies we need
 > ```cargo install bootimage
-rustup component add rust-src
-rustup component add llvm-tools-preview```
+> rustup component add rust-src
+> rustup component add llvm-tools-preview```
+
 > Now simply run cargo run
 > Now the os is running in qemu!
 
