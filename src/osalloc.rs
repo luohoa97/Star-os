@@ -7,14 +7,14 @@ use spin::Mutex;
 
 pub struct Node {
     size: usize,
-    next: AtomicPtr<Node>, // Use AtomicPtr for thread safety
+    next: AtomicPtr<Node>,
 }
 
 pub struct BumpAllocator {
     start: usize,
     end: usize,
     current: usize,
-    free_list: AtomicPtr<Node>, // Use AtomicPtr for free list
+    free_list: AtomicPtr<Node>,
     total_allocated: usize,
 }
 
@@ -32,24 +32,21 @@ impl BumpAllocator {
     pub unsafe fn alloc(&mut self, layout: Layout) -> *mut u8 {
         let size = layout.size();
         if !self.free_list.load(Ordering::SeqCst).is_null() {
-            // Try to find a free block that fits
             let mut current_node = self.free_list.load(Ordering::SeqCst);
 
             while !current_node.is_null() {
                 let node_size = (*current_node).size;
 
                 if node_size >= size {
-                    // Remove from free list and return
                     self.free_list.store((*current_node).next.load(Ordering::SeqCst), Ordering::SeqCst);
                     self.total_allocated += size;
-                    return current_node as *mut u8; // Return the node's pointer
+                    return current_node as *mut u8; // returning node pointer
                 }
 
                 current_node = (*current_node).next.load(Ordering::SeqCst);
             }
         }
 
-        // No suitable block found; fallback to bump allocation
         let new_start = self.current;
         let new_end = new_start + size;
 
