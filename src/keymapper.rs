@@ -1,4 +1,4 @@
-// ps2key.rs
+// mappings
 
 // Number row keys
 pub const KEY_1: u8 = 0x02;
